@@ -6,7 +6,6 @@ const ordersData = [
   {id: 3, name: "Emma Johnson", product_name: "VisionGuard Elite", deliveryType: 'Regular'},
   {id: 4, name: "Michael Davis", product_name: "EyeShield X5", deliveryType: 'Regular'},
   {id: 5, name: "David Wilson", product_name: "OptiGuard Max",  deliveryType: 'Express'},
-  // Add more sample data if needed
 ];
 
 const App = () => {
@@ -14,11 +13,11 @@ const App = () => {
   const [selectedTab, setSelectedTab] = useState('All');
   const [newOrder, setNewOrder] = useState({ name: '', product_name: '', deliveryType: '' });
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(3); // Number of items to display per page
+  const [itemsPerPage] = useState(3); 
 
   const handleTabClick = (tab) => {
     setSelectedTab(tab);
-    setCurrentPage(1); // Reset the current page when changing tabs
+    setCurrentPage(1); 
   };
 
   const handleInputChange = (event) => {
@@ -49,20 +48,20 @@ const App = () => {
   return (
     <div>
       <div className="tabs flex flex-row gap-5 justify-center mb-2 mt-3 text-xl text-slate-600">
-        <button
-          className={selectedTab === 'All' ? 'active focus:font-bold focus:underline focus:underline-offset-8' : ''}
+        <button aria-current="page"
+          className={selectedTab === 'All' ? 'active  inline-block p-4 text-blue-600 border-b-2 border-blue-600 rounded-t-lg active dark:text-blue-500 dark:border-blue-500' : ''}
           onClick={() => handleTabClick('All')}
         >
           All Orders
         </button>
         <button
-          className={selectedTab === 'Regular' ? 'active focus:font-bold focus:underline focus:underline-offset-8' : ''}
+          className={selectedTab === 'Regular' ? 'active inline-block p-4 text-blue-600 border-b-2 border-blue-600 rounded-t-lg active dark:text-blue-500 dark:border-blue-500' : ''}
           onClick={() => handleTabClick('Regular')}
         >
           Regular Delivery
         </button>
         <button
-          className={selectedTab === 'Express' ? 'active focus:font-bold focus:underline focus:underline-offset-8' : ''}
+          className={selectedTab === 'Express' ? 'active inline-block p-4 text-blue-600 border-b-2 border-blue-600 rounded-t-lg active dark:text-blue-500 dark:border-blue-500' : ''}
           onClick={() => handleTabClick('Express')}
         >
           Express Delivery
