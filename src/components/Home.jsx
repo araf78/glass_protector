@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 
 const ordersData = [
   {id: 1, name: "John Smith", product_name: "BlueShield Pro", deliveryType: 'Regular'},
-  {id: 2, name: "Emma Johnson", product_name: "VisionGuard Elite", deliveryType: 'Regular'},
-  {id: 3, name: "Michael Davis", product_name: "EyeShield X5", deliveryType: 'Regular'},
-  {id: 4, name: "Sarah Thompson", product_name: "SightProtector Ultra", deliveryType: 'Express'},
+  {id: 2, name: "Sarah Thompson", product_name: "SightProtector Ultra", deliveryType: 'Express'},
+  {id: 3, name: "Emma Johnson", product_name: "VisionGuard Elite", deliveryType: 'Regular'},
+  {id: 4, name: "Michael Davis", product_name: "EyeShield X5", deliveryType: 'Regular'},
   {id: 5, name: "David Wilson", product_name: "OptiGuard Max",  deliveryType: 'Express'},
   // Add more sample data if needed
 ];
@@ -13,9 +13,12 @@ const App = () => {
   const [orders, setOrders] = useState(ordersData);
   const [selectedTab, setSelectedTab] = useState('All');
   const [newOrder, setNewOrder] = useState({ name: '', product_name: '', deliveryType: '' });
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(3); // Number of items to display per page
 
   const handleTabClick = (tab) => {
     setSelectedTab(tab);
+    setCurrentPage(1); // Reset the current page when changing tabs
   };
 
   const handleInputChange = (event) => {
@@ -31,7 +34,17 @@ const App = () => {
     }
   };
 
+  // Get current orders based on pagination
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  
+  // Change page
+  const paginate = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+  
   const filteredOrders = selectedTab === 'All' ? orders : orders.filter(order => order.deliveryType === selectedTab);
+  const currentOrders = filteredOrders.slice(indexOfFirstItem, indexOfLastItem);
 
   return (
     <div>
@@ -55,28 +68,45 @@ const App = () => {
           Express Delivery
         </button>
       </div>
-      <table  class="table-auto w-3/4 mx-auto mt-4 mb-4">
+      <table className="table-auto w-3/4 mx-auto mt-4 mb-4">
         <thead>
           <tr>
-            <th class="px-4 py-2">ID</th>
-            <th class="px-4 py-2">Name</th>
-            <th class="px-4 py-2">Product Name</th>
-            <th class="px-4 py-2">Delivery Type</th>
+            <th className="px-4 py-2">ID</th>
+            <th className="px-4 py-2">Name</th>
+            <th className="px-4 py-2">Product Name</th>
+            <th className="px-4 py-2">Delivery Type</th>
           </tr>
         </thead>
         <tbody>
-          {filteredOrders.map(order => (
+          {currentOrders.map(order => (
             <tr key={order.id}>
-              <td class="border px-4 py-2">{order.id}</td>
-              <td class="border px-4 py-2">{order.name}</td>
-              <td class="border px-4 py-2">{order.product_name}</td>
-              <td class="border px-4 py-2">{order.deliveryType}</td>
+              <td className="border px-4 py-2">{order.id}</td>
+              <td className="border px-4 py-2">{order.name}</td>
+              <td className="border px-4 py-2">{order.product_name}</td>
+              <td className="border px-4 py-2">{order.deliveryType}</td>
             </tr>
           ))}
         </tbody>
       </table>
-      <div className="add-order mt-2  mx-auto">
-        <div class="flex flex-col justify-center items-center gap-3 -mx-3 mb-2">
+      {/* Pagination */}
+      <div className="pagination relative flex justify-center items-center mt-2">
+        {filteredOrders.length > itemsPerPage && (
+          <ul className="flex">
+            {Array.from({ length: Math.ceil(filteredOrders.length / itemsPerPage) }).map((_, index) => (
+              <li key={index}>
+                <button
+                  className={`pagination-link ${currentPage === index + 1 ? 'active text-2xl bg-gray-200   ml-4 p-2 rounded-lg border-' : 'text-2xl bg-gray-200 ml-4 p-2 rounded-lg border-'}`}
+                  onClick={() => paginate(index + 1)}
+                >
+                  {index + 1}
+                </button>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+      <div className="add-order mt-2 mx-auto">
+      <div class="flex flex-col justify-center items-center gap-3 -mx-3 mb-2">
           <h2 className='mt-4 font-serif font-bold text-transparent bg-clip-text bg-gradient-to-r from-gray-500 to-neutral-600'>Add New Order</h2>
           <div class="w-full md:w-1/3 px-3 mb-6 md:mb-0 ">
             <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2 text-left" for="grid-city">
@@ -127,9 +157,10 @@ const App = () => {
           </div>
 
         </div>
-        <button onClick={handleAddOrder} className=' mt-1 py-2 px-2 text-white rounded-lg w-1/4 mb-4 mt-1 bg-[radial-gradient(ellipse_at_top_left,_var(--tw-gradient-stops))] from-gray-400 via-neutral-500 to-zinc-400'>Add Order</button>
+        <button onClick={handleAddOrder} className=' py-2 px-2 text-white rounded-lg w-1/4 mb-4 mt-1 bg-[radial-gradient(ellipse_at_top_left,_var(--tw-gradient-stops))] from-gray-400 via-neutral-500 to-zinc-400'>Add Order</button>
       </div>
-    </div>
+      </div>
+    
   );
 };
 
